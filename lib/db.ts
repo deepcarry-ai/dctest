@@ -27,6 +27,9 @@ export type DbShape = {
       enabled: boolean;
     };
   };
+  settings: {
+    pollIntervalMs: number;
+  };
 };
 
 const DB_PATH = path.join(process.cwd(), "data", "db.json");
@@ -55,6 +58,9 @@ const defaultDb: DbShape = {
       enabled: false,
     },
   },
+  settings: {
+    pollIntervalMs: 300000,
+  },
 };
 
 async function ensureDb(): Promise<void> {
@@ -82,6 +88,10 @@ export async function readDb(): Promise<DbShape> {
         ...defaultDb.notifications.telegram,
         ...parsed.notifications?.telegram,
       },
+    },
+    settings: {
+      ...defaultDb.settings,
+      ...parsed.settings,
     },
     accounts: parsed.accounts ?? defaultDb.accounts,
     items: parsed.items ?? defaultDb.items,

@@ -24,8 +24,6 @@ type Toast = {
   body: string;
 };
 
-const POLL_INTERVAL = 60_000;
-
 export default function Home() {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [items, setItems] = useState<CapturedItem[]>([]);
@@ -39,6 +37,7 @@ export default function Home() {
   const [filterHandle, setFilterHandle] = useState("all");
   const [showUnread, setShowUnread] = useState(false);
   const [telegramEnabled, setTelegramEnabled] = useState(false);
+  const [pollIntervalMs, setPollIntervalMs] = useState(300000);
 
   const lastChecked = useMemo(() => {
     const last = accounts
@@ -67,18 +66,21 @@ export default function Home() {
   }, [items, filterHandle, search, showUnread]);
 
   async function loadData() {
-    const [accountsRes, itemsRes, keywordsRes] = await Promise.all([
+    const [accountsRes, itemsRes, keywordsRes, settingsRes] = await Promise.all([
       fetch("/api/accounts"),
       fetch("/api/items"),
       fetch("/api/keywords"),
+      fetch("/api/settings"),
     ]);
     const accountsJson = await accountsRes.json();
     const itemsJson = await itemsRes.json();
     const keywordsJson = await keywordsRes.json();
+    const settingsJson = await settingsRes.json();
     setAccounts(accountsJson.accounts ?? []);
     setItems(itemsJson.items ?? []);
     setKeywords(keywordsJson.keywords ?? []);
     setTelegramEnabled(Boolean(keywordsJson.notifications?.telegram?.enabled));
+    setPollIntervalMs(Number(settingsJson.settings?.pollIntervalMs) || 300000);
   }
 
   async function runScan() {
@@ -175,16 +177,28 @@ export default function Home() {
     window.open(`/api/items?format=${format}`, "_blank");
   }
 
-  function requestNotification() {
+  async function requestNotification() {
     if (typeof window === "undefined" || !("Notification" in window)) return;
     Notification.requestPermission();
   }
 
+  async function updatePollInterval(value: number) {
+    setPollIntervalMs(value);
+    await fetch("/api/settings", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pollIntervalMs: value }),
+    });
+  }
+
   useEffect(() => {
     loadData().then(runScan);
-    const timer = setInterval(runScan, POLL_INTERVAL);
-    return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    const timer = setInterval(runScan, pollIntervalMs);
+    return () => clearInterval(timer);
+  }, [pollIntervalMs]);
 
   useEffect(() => {
     if (toasts.length === 0) return;
@@ -211,7 +225,7 @@ export default function Home() {
               </div>
               <div className="flex items-center gap-3 text-sm text-slate-300">
                 <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 whitespace-nowrap text-slate-200/80">
-                  轮询：60s
+                  轮询：{Math.round(pollIntervalMs / 60000)}分钟
                 </span>
                 <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 whitespace-nowrap text-slate-200/80">
                   最后扫描：{scanAt ? new Date(scanAt).toLocaleString() : "-"}
@@ -364,6 +378,25 @@ export default function Home() {
                     />
                     启用 Telegram 通知（需 TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID）
                   </label>
+
+                  <div className="flex flex-col gap-2 text-xs text-slate-300/80">
+                    <span>扫描频率</span>
+                    <div className="flex flex-wrap gap-2">
+                      {[1, 5, 10, 15].map((min) => (
+                        <button
+                          key={min}
+                          onClick={() => updatePollInterval(min * 60000)}
+                          className={`rounded-full border px-4 py-2 text-xs transition ${
+                            pollIntervalMs === min * 60000
+                              ? "border-cyan-300 bg-cyan-400/20 text-white"
+                              : "border-white/10 bg-white/5 text-slate-200/80 hover:border-white/30 hover:text-white"
+                          }`}
+                        >
+                          {min}分钟
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
                   <div className="flex flex-wrap gap-3">
                     <button
