@@ -210,10 +210,10 @@ export default function Home() {
                 </h1>
               </div>
               <div className="flex items-center gap-3 text-sm text-slate-300">
-                <span className="rounded-full border border-cyan-400/30 px-3 py-1">
+                <span className="rounded-full border border-cyan-400/30 px-3 py-1 whitespace-nowrap">
                   轮询：60s
                 </span>
-                <span className="rounded-full border border-slate-700 px-3 py-1">
+                <span className="rounded-full border border-slate-700 px-3 py-1 whitespace-nowrap">
                   最后扫描：{scanAt ? new Date(scanAt).toLocaleString() : "-"}
                 </span>
               </div>
@@ -235,7 +235,7 @@ export default function Home() {
                   </div>
                   <button
                     onClick={runScan}
-                    className="rounded-full border border-cyan-400/50 px-4 py-2 text-sm text-cyan-200 transition hover:border-cyan-300 hover:text-white"
+                    className="min-w-[96px] whitespace-nowrap rounded-full border border-cyan-400/40 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-100 shadow shadow-cyan-500/10 transition hover:border-cyan-300 hover:bg-cyan-500/20"
                     disabled={loading}
                   >
                     {loading ? "扫描中..." : "手动扫描"}
@@ -252,7 +252,7 @@ export default function Home() {
                     />
                     <button
                       onClick={addAccount}
-                      className="rounded-2xl bg-cyan-500 px-5 py-3 text-sm font-medium text-slate-950 transition hover:bg-cyan-400"
+                      className="min-w-[72px] rounded-2xl bg-cyan-500 px-5 py-3 text-sm font-semibold text-slate-950 shadow shadow-cyan-500/20 transition hover:bg-cyan-400"
                     >
                       添加
                     </button>
@@ -320,7 +320,7 @@ export default function Home() {
                   />
                   <button
                     onClick={addKeyword}
-                    className="rounded-2xl bg-cyan-500 px-5 py-3 text-sm font-medium text-slate-950 transition hover:bg-cyan-400"
+                    className="min-w-[72px] rounded-2xl bg-cyan-500 px-5 py-3 text-sm font-semibold text-slate-950 shadow shadow-cyan-500/20 transition hover:bg-cyan-400"
                   >
                     添加
                   </button>
@@ -368,13 +368,13 @@ export default function Home() {
                   <div className="flex flex-wrap gap-3">
                     <button
                       onClick={() => exportItems("csv")}
-                      className="rounded-full border border-slate-700 px-4 py-2 text-xs text-slate-200 transition hover:border-cyan-400"
+                      className="rounded-full border border-slate-700 bg-slate-950/60 px-4 py-2 text-xs text-slate-200 transition hover:border-cyan-400 hover:text-white"
                     >
                       导出 CSV
                     </button>
                     <button
                       onClick={() => exportItems("json")}
-                      className="rounded-full border border-slate-700 px-4 py-2 text-xs text-slate-200 transition hover:border-cyan-400"
+                      className="rounded-full border border-slate-700 bg-slate-950/60 px-4 py-2 text-xs text-slate-200 transition hover:border-cyan-400 hover:text-white"
                     >
                       导出 JSON
                     </button>
