@@ -3,6 +3,7 @@ import { updateDb } from "@/lib/db";
 import { fetchRss, isAiRelated } from "@/lib/x";
 import { sendTelegram } from "@/lib/notify";
 import { normalizeHandle } from "@/lib/normalize";
+import { fetchTweetsWithPlaywright } from "@/lib/x-playwright";
 
 export async function POST() {
   const now = new Date().toISOString();
@@ -17,7 +18,23 @@ export async function POST() {
           account.handle = normalizedHandle;
         }
 
-        const rssItems = await fetchRss(account.handle);
+        let rssItems = [] as Awaited<ReturnType<typeof fetchRss>>;
+        try {
+          rssItems = await fetchRss(account.handle);
+        } catch {
+          rssItems = [];
+        }
+
+        if (rssItems.length === 0) {
+          const browserItems = await fetchTweetsWithPlaywright(account.handle);
+          rssItems = browserItems.map((item) => ({
+            id: item.id,
+            url: item.url,
+            content: item.content,
+            createdAt: item.createdAt,
+          }));
+        }
+
         if (rssItems.length === 0) continue;
 
         const sorted = [...rssItems].sort((a, b) =>
