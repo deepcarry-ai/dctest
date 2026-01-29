@@ -195,37 +195,37 @@ export default function Home() {
   }, [toasts]);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen bg-[#05070d] text-slate-100">
       <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-950 to-black" />
-        <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 py-12">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.18),_transparent_55%)]" />
+        <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-10 px-6 py-14">
           <header className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm uppercase tracking-[0.4em] text-cyan-300/80">
+                <p className="text-xs uppercase tracking-[0.6em] text-cyan-200/70">
                   XWatcher
                 </p>
-                <h1 className="text-4xl font-semibold text-white">
+                <h1 className="text-4xl font-semibold text-white sm:text-5xl">
                   XWatcher · AI 推文监控台
                 </h1>
               </div>
               <div className="flex items-center gap-3 text-sm text-slate-300">
-                <span className="rounded-full border border-cyan-400/30 px-3 py-1 whitespace-nowrap">
+                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 whitespace-nowrap text-slate-200/80">
                   轮询：60s
                 </span>
-                <span className="rounded-full border border-slate-700 px-3 py-1 whitespace-nowrap">
+                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 whitespace-nowrap text-slate-200/80">
                   最后扫描：{scanAt ? new Date(scanAt).toLocaleString() : "-"}
                 </span>
               </div>
             </div>
-            <p className="max-w-2xl text-base text-slate-300">
+            <p className="max-w-2xl text-base leading-7 text-slate-300/90">
               监控指定的 X 帐号，当推文内容与 AI 关键词匹配时自动抓取前 500 字符并保存，同时即时提醒你。
             </p>
           </header>
 
           <section className="grid gap-6 lg:grid-cols-[1.1fr_1.4fr]">
             <div className="flex flex-col gap-6">
-              <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-xl shadow-cyan-500/5">
+              <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl shadow-[0_20px_60px_-30px_rgba(8,112,184,0.45)]">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <h2 className="text-xl font-semibold text-white">监控帐号</h2>
@@ -235,7 +235,7 @@ export default function Home() {
                   </div>
                   <button
                     onClick={runScan}
-                    className="min-w-[96px] whitespace-nowrap rounded-full border border-cyan-400/40 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-100 shadow shadow-cyan-500/10 transition hover:border-cyan-300 hover:bg-cyan-500/20"
+                    className="min-w-[96px] whitespace-nowrap rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:border-white/30 hover:bg-white/15"
                     disabled={loading}
                   >
                     {loading ? "扫描中..." : "手动扫描"}
@@ -248,11 +248,11 @@ export default function Home() {
                       value={handleInput}
                       onChange={(event) => setHandleInput(event.target.value)}
                       placeholder="输入 X 帐号，例如 @elonmusk"
-                      className="flex-1 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-slate-100 outline-none transition focus:border-cyan-400"
+                      className="flex-1 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100 outline-none transition focus:border-cyan-300 focus:ring-2 focus:ring-cyan-400/20"
                     />
                     <button
                       onClick={addAccount}
-                      className="min-w-[72px] rounded-2xl bg-cyan-500 px-5 py-3 text-sm font-semibold text-slate-950 shadow shadow-cyan-500/20 transition hover:bg-cyan-400"
+                      className="min-w-[72px] rounded-2xl bg-cyan-400/90 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_12px_30px_-18px_rgba(34,211,238,0.9)] transition hover:bg-cyan-300"
                     >
                       添加
                     </button>
@@ -262,7 +262,7 @@ export default function Home() {
                     {accounts.map((account) => (
                       <div
                         key={account.handle}
-                        className="flex items-center justify-between rounded-2xl border border-slate-800 bg-slate-950/60 px-4 py-3"
+                        className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3"
                       >
                         <div>
                           <p className="text-sm font-medium text-white">
@@ -277,7 +277,7 @@ export default function Home() {
                         </div>
                         <button
                           onClick={() => removeAccount(account.handle)}
-                          className="text-xs text-slate-400 transition hover:text-rose-300"
+                          className="text-xs text-slate-400 transition hover:text-rose-200"
                         >
                           移除
                         </button>
@@ -290,7 +290,7 @@ export default function Home() {
                     <span>最近检测：{lastChecked}</span>
                     <button
                       onClick={requestNotification}
-                      className="rounded-full border border-slate-700 px-3 py-1 text-slate-300 transition hover:border-cyan-400"
+                      className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-slate-200/80 transition hover:border-white/30 hover:text-white"
                     >
                       启用浏览器通知
                     </button>
@@ -298,7 +298,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-6">
+              <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl shadow-[0_20px_60px_-30px_rgba(8,112,184,0.35)]">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <h2 className="text-xl font-semibold text-white">AI 关键词</h2>
@@ -316,11 +316,11 @@ export default function Home() {
                     value={keywordInput}
                     onChange={(event) => setKeywordInput(event.target.value)}
                     placeholder="添加关键词，例如 生成式AI"
-                    className="flex-1 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-slate-100 outline-none transition focus:border-cyan-400"
+                    className="flex-1 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100 outline-none transition focus:border-cyan-300 focus:ring-2 focus:ring-cyan-400/20"
                   />
                   <button
                     onClick={addKeyword}
-                    className="min-w-[72px] rounded-2xl bg-cyan-500 px-5 py-3 text-sm font-semibold text-slate-950 shadow shadow-cyan-500/20 transition hover:bg-cyan-400"
+                    className="min-w-[72px] rounded-2xl bg-cyan-400/90 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_12px_30px_-18px_rgba(34,211,238,0.9)] transition hover:bg-cyan-300"
                   >
                     添加
                   </button>
@@ -330,7 +330,7 @@ export default function Home() {
                   {keywords.map((keyword) => (
                     <span
                       key={keyword}
-                      className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1 text-xs text-slate-200"
+                      className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200"
                     >
                       {keyword}
                       <button
@@ -344,7 +344,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-6">
+              <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl shadow-[0_20px_60px_-30px_rgba(8,112,184,0.3)]">
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <h2 className="text-xl font-semibold text-white">通知与导出</h2>
@@ -360,7 +360,7 @@ export default function Home() {
                       type="checkbox"
                       checked={telegramEnabled}
                       onChange={(event) => toggleTelegram(event.target.checked)}
-                      className="h-4 w-4 rounded border-slate-600 bg-slate-950 text-cyan-500"
+                      className="h-4 w-4 rounded border-white/20 bg-white/5 text-cyan-400"
                     />
                     启用 Telegram 通知（需 TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID）
                   </label>
@@ -368,13 +368,13 @@ export default function Home() {
                   <div className="flex flex-wrap gap-3">
                     <button
                       onClick={() => exportItems("csv")}
-                      className="rounded-full border border-slate-700 bg-slate-950/60 px-4 py-2 text-xs text-slate-200 transition hover:border-cyan-400 hover:text-white"
+                      className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-slate-200/80 transition hover:border-white/30 hover:text-white"
                     >
                       导出 CSV
                     </button>
                     <button
                       onClick={() => exportItems("json")}
-                      className="rounded-full border border-slate-700 bg-slate-950/60 px-4 py-2 text-xs text-slate-200 transition hover:border-cyan-400 hover:text-white"
+                      className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-slate-200/80 transition hover:border-white/30 hover:text-white"
                     >
                       导出 JSON
                     </button>
@@ -383,7 +383,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-6">
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl shadow-[0_20px_60px_-30px_rgba(8,112,184,0.4)]">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <h2 className="text-xl font-semibold text-white">AI 相关推文</h2>
@@ -399,12 +399,12 @@ export default function Home() {
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
                   placeholder="搜索内容"
-                  className="min-w-[200px] flex-1 rounded-full border border-slate-700 bg-slate-950 px-4 py-2 text-xs text-slate-100 outline-none transition focus:border-cyan-400"
+                  className="min-w-[200px] flex-1 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-slate-100 outline-none transition focus:border-cyan-300 focus:ring-2 focus:ring-cyan-400/20"
                 />
                 <select
                   value={filterHandle}
                   onChange={(event) => setFilterHandle(event.target.value)}
-                  className="rounded-full border border-slate-700 bg-slate-950 px-4 py-2 text-xs text-slate-100"
+                  className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-slate-100"
                 >
                   <option value="all">全部账号</option>
                   {accounts.map((account) => (
@@ -413,7 +413,7 @@ export default function Home() {
                     </option>
                   ))}
                 </select>
-                <label className="flex items-center gap-2 rounded-full border border-slate-700 bg-slate-950 px-4 py-2 text-xs">
+                <label className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs">
                   <input
                     type="checkbox"
                     checked={showUnread}
@@ -423,7 +423,7 @@ export default function Home() {
                 </label>
                 <button
                   onClick={() => markRead(items.map((item) => item.id), true)}
-                  className="rounded-full border border-slate-700 px-4 py-2 text-xs text-slate-200 transition hover:border-cyan-400"
+                  className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-slate-200/80 transition hover:border-white/30 hover:text-white"
                 >
                   全部标记已读
                 </button>
@@ -431,18 +431,18 @@ export default function Home() {
 
               <div className="mt-6 space-y-4">
                 {filteredItems.length === 0 ? (
-                  <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-950/40 p-6 text-sm text-slate-500">
+                  <div className="rounded-2xl border border-dashed border-white/10 bg-white/5 p-6 text-sm text-slate-300/70">
                     暂无捕获记录。系统将自动扫描并保存符合条件的推文内容。
                   </div>
                 ) : (
                   filteredItems.map((item) => (
                     <article
                       key={item.id}
-                      className={`rounded-2xl border border-slate-800 bg-slate-950/60 p-4 ${
-                        item.read ? "opacity-70" : "border-cyan-500/40"
+                      className={`rounded-2xl border border-white/10 bg-white/5 p-4 ${
+                        item.read ? "opacity-70" : "border-cyan-300/50"
                       }`}
                     >
-                      <div className="flex items-center justify-between text-xs text-slate-400">
+                      <div className="flex items-center justify-between text-xs text-slate-300/80">
                         <span>@{item.handle}</span>
                         <span>
                           {item.createdAt
@@ -456,13 +456,13 @@ export default function Home() {
                           href={item.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-cyan-300 hover:text-cyan-200"
+                          className="text-cyan-200 hover:text-cyan-100"
                         >
                           查看原推文 →
                         </a>
                         <button
                           onClick={() => markRead([item.id], !item.read)}
-                          className="text-slate-400 transition hover:text-cyan-200"
+                          className="text-slate-300/80 transition hover:text-white"
                         >
                           {item.read ? "标记未读" : "标记已读"}
                         </button>
@@ -480,7 +480,7 @@ export default function Home() {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className="rounded-2xl border border-cyan-400/40 bg-slate-900/90 p-4 text-sm text-slate-100 shadow-lg shadow-cyan-500/10"
+            className="rounded-2xl border border-white/10 bg-white/10 p-4 text-sm text-slate-100 shadow-[0_16px_40px_-24px_rgba(56,189,248,0.6)] backdrop-blur-xl"
           >
             <p className="font-medium text-cyan-200">{toast.title}</p>
             <p className="mt-2 whitespace-pre-line text-xs text-slate-300">
