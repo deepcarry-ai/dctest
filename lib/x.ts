@@ -4,23 +4,6 @@ const NITTER_INSTANCES = [
   "https://nitter.lacontrevoie.fr",
 ];
 
-const AI_KEYWORDS = [
-  "ai",
-  "a.i.",
-  "人工智能",
-  "大模型",
-  "模型",
-  "机器学习",
-  "深度学习",
-  "llm",
-  "gpt",
-  "openai",
-  "anthropic",
-  "claude",
-  "gemini",
-  "aigc",
-];
-
 export type RssItem = {
   id: string;
   url: string;
@@ -69,27 +52,41 @@ function parseRss(xml: string): RssItem[] {
   });
 }
 
-export function isAiRelated(text: string): boolean {
+export function isAiRelated(text: string, keywords: string[]): boolean {
   const lowered = text.toLowerCase();
-  return AI_KEYWORDS.some((keyword) => lowered.includes(keyword));
+  return keywords.some((keyword) => lowered.includes(keyword.toLowerCase()));
+}
+
+async function fetchWithTimeout(url: string, timeoutMs = 8000): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, {
+      headers: {
+        "User-Agent": "XWatcher/1.0",
+        Accept: "application/rss+xml, application/xml;q=0.9, */*;q=0.8",
+      },
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 export async function fetchRss(handle: string): Promise<RssItem[]> {
   let lastError: unknown;
   for (const base of NITTER_INSTANCES) {
-    try {
-      const url = `${base}/${handle}/rss`;
-      const res = await fetch(url, {
-        headers: {
-          "User-Agent": "XWatcher/1.0",
-          Accept: "application/rss+xml, application/xml;q=0.9, */*;q=0.8",
-        },
-      });
-      if (!res.ok) throw new Error(`RSS fetch failed: ${res.status}`);
-      const xml = await res.text();
-      return parseRss(xml);
-    } catch (error) {
-      lastError = error;
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        const url = `${base}/${handle}/rss`;
+        const res = await fetchWithTimeout(url);
+        if (!res.ok) throw new Error(`RSS fetch failed: ${res.status}`);
+        const xml = await res.text();
+        return parseRss(xml);
+      } catch (error) {
+        lastError = error;
+        await new Promise((resolve) => setTimeout(resolve, 300 * (attempt + 1)));
+      }
     }
   }
   throw lastError;
