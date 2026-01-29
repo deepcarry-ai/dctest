@@ -2,16 +2,21 @@ import { NextResponse } from "next/server";
 import { updateDb } from "@/lib/db";
 import { fetchRss, isAiRelated } from "@/lib/x";
 import { sendTelegram } from "@/lib/notify";
+import { normalizeHandle } from "@/lib/normalize";
 
 export async function POST() {
   const now = new Date().toISOString();
-  let created: { handle: string; content: string; url: string }[] = [];
 
   const result = await updateDb(async (db) => {
     const newItems = [] as typeof db.items;
 
     for (const account of db.accounts.filter((acc) => acc.enabled)) {
       try {
+        const normalizedHandle = normalizeHandle(account.handle);
+        if (normalizedHandle && normalizedHandle !== account.handle) {
+          account.handle = normalizedHandle;
+        }
+
         const rssItems = await fetchRss(account.handle);
         if (rssItems.length === 0) continue;
 
@@ -44,12 +49,6 @@ export async function POST() {
         account.lastCheckedAt = now;
       }
     }
-
-    created = newItems.map((item) => ({
-      handle: item.handle,
-      content: item.content,
-      url: item.url,
-    }));
 
     const mergedItems = [...newItems, ...db.items];
 

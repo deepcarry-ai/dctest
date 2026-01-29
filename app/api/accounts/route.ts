@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { updateDb, readDb } from "@/lib/db";
+import { normalizeHandle } from "@/lib/normalize";
 
 export async function GET() {
   const db = await readDb();
@@ -8,7 +9,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const handle = String(body.handle || "").replace(/^@/, "").trim();
+  const handle = normalizeHandle(String(body.handle || ""));
   if (!handle) {
     return NextResponse.json({ error: "handle is required" }, { status: 400 });
   }
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   const { searchParams } = new URL(request.url);
-  const handle = String(searchParams.get("handle") || "").replace(/^@/, "").trim();
+  const handle = normalizeHandle(String(searchParams.get("handle") || ""));
   if (!handle) {
     return NextResponse.json({ error: "handle is required" }, { status: 400 });
   }
